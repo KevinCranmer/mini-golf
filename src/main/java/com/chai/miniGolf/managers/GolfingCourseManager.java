@@ -6,13 +6,12 @@ import com.chai.miniGolf.events.HoleCompletedEvent;
 import com.chai.miniGolf.events.NextHoleRequestedEvent;
 import com.chai.miniGolf.events.PlayerDoneGolfingEvent;
 import com.chai.miniGolf.models.Course;
+import com.chai.miniGolf.models.Hole;
 import com.chai.miniGolf.models.Teleporters;
 import com.chai.miniGolf.utils.ShortUtils.ShortUtils;
 import lombok.Builder;
 import lombok.Data;
 import lombok.Getter;
-import net.kyori.adventure.text.Component;
-import net.kyori.adventure.title.Title;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.FireworkEffect;
@@ -38,6 +37,7 @@ import org.bukkit.event.entity.EntitySpawnEvent;
 import org.bukkit.event.player.PlayerDropItemEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
+import org.bukkit.event.player.PlayerTeleportEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.FireworkMeta;
 import org.bukkit.persistence.PersistentDataContainer;
@@ -47,7 +47,6 @@ import org.bukkit.scheduler.BukkitTask;
 import org.bukkit.util.Vector;
 
 import javax.annotation.Nullable;
-import java.time.Duration;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.HashMap;
@@ -249,6 +248,35 @@ public class GolfingCourseManager implements Listener {
         removeEditor(event.getPlayer());
     }
 
+    /**
+     * Trying to handle /home teleports or something
+     */
+    @EventHandler
+    private void onPlayerTeleport(PlayerTeleportEvent event) {
+        GolfingInfo golfingInfo = golfers.get(event.getPlayer().getUniqueId());
+        if (golfingInfo == null) {
+            return;
+        }
+        if (golfingInfo.getCourse().getHoles().stream().map(Hole::getStartingLocation).anyMatch(sl -> event.getTo().distanceSquared(sl) < 5.0)) { //5.0 complete guess
+            return; // Assumed that the teleport was performed by this plugin
+        }
+        if (golfingInfo.getCourse().getEndingLocation().distanceSquared(event.getTo()) < 5.0) {
+            return; // Assumed that the teleport was performed by this plugin
+        }
+        Snowball ball = golfingInfo.getGolfball();
+        if (ball != null) {
+            ball.remove();
+        }
+        golfingInfo.getCourse().playerQuit(event.getPlayer());
+        golfers.remove(event.getPlayer().getUniqueId());
+        cleanUpAnyUnusedBalls(event.getPlayer());
+        event.getPlayer().getInventory().setContents(golfingInfo.getInvBeforeGolfing());
+        if (golfers.isEmpty()) {
+            golfballPhysicsTask.cancel();
+        }
+        removeEditor(event.getPlayer());
+    }
+
     @EventHandler
     private void playerDoneWithCurrentCourse(PlayerDoneGolfingEvent event) {
         Player p = event.golfer();
@@ -399,7 +427,7 @@ public class GolfingCourseManager implements Listener {
         BlockFace faceEntered = getFaceEntered(ball);
         Vector newVel = Teleporters.velocityAfterTeleport(vel, faceEntered, teleporter.get());
         BlockFace destinationFace = Teleporters.getConfiguredDestinationDirection(faceEntered, teleporter.get());
-        Vector ballOffsetForDestinationFace = Teleporters.getOffsetForDestinationFace(destinationFace, 1 + ball.getY() - ((int)ball.getY()));
+        Vector ballOffsetForDestinationFace = Teleporters.getOffsetForDestinationFace(destinationFace, 1 + ball.getLocation().getY() - ((int)ball.getLocation().getY()));
         Location newLoc = teleporter.get().getDestinationBlock(ball.getWorld()).getRelative(destinationFace).getLocation().add(ballOffsetForDestinationFace);
         ball.teleport(newLoc);
         ball.setVelocity(newVel);
@@ -435,7 +463,7 @@ public class GolfingCourseManager implements Listener {
         }
         potentialExitBlocks.stream()
             .min(Comparator.comparingInt(BubbleColumnExitBlock::getDistanceToGround))
-            .ifPresent(eb -> ball.teleport(eb.getExitBlock().getLocation().add(0.5, ball.getY() - ((int)ball.getY()), 0.5)));
+            .ifPresent(eb -> ball.teleport(eb.getExitBlock().getLocation().add(0.5, ball.getLocation().getY() - ((int)ball.getLocation().getY()), 0.5)));
     }
 
     @Nullable
@@ -472,7 +500,7 @@ public class GolfingCourseManager implements Listener {
         Player p = Bukkit.getPlayer(golfer.getKey());
         String msg = getPlugin().config().scoreMsg(p.getName(), String.valueOf(course.playersCurrentHole(golfer.getKey()) + 1), Integer.toString(par));
         p.sendMessage(msg);
-        p.showTitle(Title.title(Component.text(holeResultString(course.getHoles().get(course.playersCurrentHole(golfer.getKey())), par)), Component.empty(), Title.Times.times(Duration.ZERO, Duration.ofSeconds(2), Duration.ZERO)));
+        p.sendTitle(holeResultString(course.getHoles().get(course.playersCurrentHole(golfer.getKey())), par), "", 0, 40, 0);
 
         // Spawn firework
         Firework firework = (Firework) ball.getWorld().spawnEntity(ball.getLocation(), EntityType.FIREWORK_ROCKET);

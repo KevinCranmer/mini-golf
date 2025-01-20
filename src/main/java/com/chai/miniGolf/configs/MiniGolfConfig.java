@@ -4,7 +4,6 @@ import com.chai.miniGolf.models.Course;
 import com.chai.miniGolf.models.Hole;
 import com.chai.miniGolf.models.Teleporters;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
 import lombok.Getter;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
@@ -27,7 +26,7 @@ import static com.chai.miniGolf.utils.fileutils.FileUtils.loadOriginalConfig;
 
 public class MiniGolfConfig {
     private static final String courseDirectory = "courses";
-    private static final ObjectMapper mapper = new ObjectMapper(new YAMLFactory());
+    private static final ObjectMapper mapper = new ObjectMapper();
     private final YamlConfiguration originalConfig;
     private List<Course> courses;
     @Getter private Map<String, ClubPower> clubPowerMap;
@@ -80,7 +79,7 @@ public class MiniGolfConfig {
         File courseDir = new File(getPlugin().getDataFolder().getAbsolutePath() + File.separatorChar + courseDirectory);
         courseDir.mkdir();
         return Arrays.stream(courseDir.listFiles())
-            .filter(f -> f.getName().endsWith(".yml"))
+            .filter(f -> f.getName().endsWith(".json"))
             .map(f -> {
                 try {
                     return mapper.readValue(f, Course.class);
@@ -106,7 +105,7 @@ public class MiniGolfConfig {
     }
 
     public boolean deleteCourse(Course course) {
-        File file = new File(getPlugin().getDataFolder().getAbsolutePath() + File.separatorChar + courseDirectory, course.getName() + ".yml");
+        File file = new File(getPlugin().getDataFolder().getAbsolutePath() + File.separatorChar + courseDirectory, course.getName() + ".json");
         boolean wasSuccessful = file.delete();
         courses = loadCourses();
         return wasSuccessful;
@@ -163,7 +162,7 @@ public class MiniGolfConfig {
     }
 
     private void saveCourse(Course course) {
-        File file = new File(getPlugin().getDataFolder().getAbsolutePath() + File.separatorChar + courseDirectory, course.getName() + ".yml");
+        File file = new File(getPlugin().getDataFolder().getAbsolutePath() + File.separatorChar + courseDirectory, course.getName() + ".json");
         try {
             file.getParentFile().mkdir();
             file.createNewFile();

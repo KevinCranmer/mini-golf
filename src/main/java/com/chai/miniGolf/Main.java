@@ -23,7 +23,7 @@ import org.bukkit.NamespacedKey;
 import org.bukkit.attribute.Attribute;
 import org.bukkit.attribute.AttributeModifier;
 import org.bukkit.attribute.AttributeModifier.Operation;
-import org.bukkit.inventory.EquipmentSlot;
+import org.bukkit.inventory.EquipmentSlotGroup;
 import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
@@ -57,8 +57,8 @@ public class Main extends JavaPlugin {
 	public final NamespacedKey bubbleColumnKey = new NamespacedKey(this, "bubbleColumnExitStep"); // 0 - Nothing to do with bubbleColumn yet, 1 - currently in bubble column, 2 - was in bubble column and needs to find exit spot when y vel <= 0
 
 	// Stuff
-	private final AttributeModifier noDamage = new AttributeModifier(UUID.randomUUID(), "generic.attackDamage", -10, Operation.ADD_NUMBER, EquipmentSlot.HAND);
-	private final AttributeModifier fastSwing = new AttributeModifier(UUID.randomUUID(), "generic.attackSpeed", 10, Operation.MULTIPLY_SCALAR_1, EquipmentSlot.HAND);
+	private final AttributeModifier noDamage = new AttributeModifier(new NamespacedKey("generic", "attackdamage"), -10, Operation.ADD_NUMBER, EquipmentSlotGroup.HAND);
+	private final AttributeModifier fastSwing = new AttributeModifier(new NamespacedKey("generic", "attackspeed"), 10, Operation.MULTIPLY_SCALAR_1, EquipmentSlotGroup.HAND);
 
 	// Constants
 	public final double floorOffset = 0.05;
@@ -105,8 +105,8 @@ public class Main extends JavaPlugin {
 		meta.setLore(Arrays.asList(ChatColor.DARK_GRAY + "A well-rounded club", ChatColor.DARK_GRAY + "for longer distances."));
 		meta.setCustomModelData(2);
 		meta.addItemFlags(ItemFlag.HIDE_ATTRIBUTES);
-		meta.addAttributeModifier(Attribute.GENERIC_ATTACK_DAMAGE, noDamage);
-		meta.addAttributeModifier(Attribute.GENERIC_ATTACK_SPEED, fastSwing);
+		meta.addAttributeModifier(Attribute.ATTACK_DAMAGE, noDamage);
+		meta.addAttributeModifier(Attribute.ATTACK_SPEED, fastSwing);
 		ShortUtils.addKey(meta, ironKey);
 		iron.setItemMeta(meta);
 
@@ -117,8 +117,8 @@ public class Main extends JavaPlugin {
 		meta.setLore(Arrays.asList(ChatColor.DARK_GRAY + "A specialized club", ChatColor.DARK_GRAY + "for tall obstacles."));
 		meta.setCustomModelData(3);
 		meta.addItemFlags(ItemFlag.HIDE_ATTRIBUTES);
-		meta.addAttributeModifier(Attribute.GENERIC_ATTACK_DAMAGE, noDamage);
-		meta.addAttributeModifier(Attribute.GENERIC_ATTACK_SPEED, fastSwing);
+		meta.addAttributeModifier(Attribute.ATTACK_DAMAGE, noDamage);
+		meta.addAttributeModifier(Attribute.ATTACK_SPEED, fastSwing);
 		ShortUtils.addKey(meta, wedgeKey);
 		wedge.setItemMeta(meta);
 
@@ -129,8 +129,8 @@ public class Main extends JavaPlugin {
 		meta.setLore(Arrays.asList(ChatColor.DARK_GRAY + "A specialized club", ChatColor.DARK_GRAY + "for finishing holes."));
 		meta.setCustomModelData(1);
 		meta.addItemFlags(ItemFlag.HIDE_ATTRIBUTES);
-		meta.addAttributeModifier(Attribute.GENERIC_ATTACK_DAMAGE, noDamage);
-		meta.addAttributeModifier(Attribute.GENERIC_ATTACK_SPEED, fastSwing);
+		meta.addAttributeModifier(Attribute.ATTACK_DAMAGE, noDamage);
+		meta.addAttributeModifier(Attribute.ATTACK_SPEED, fastSwing);
 		ShortUtils.addKey(meta, putterKey);
 		putter.setItemMeta(meta);
 

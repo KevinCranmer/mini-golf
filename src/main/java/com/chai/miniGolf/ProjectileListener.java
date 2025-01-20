@@ -52,6 +52,7 @@ public class ProjectileListener implements Listener
 			Location loc = ent.getLocation();
 			Vector vel = ent.getVelocity();
 			World world = ent.getWorld();
+			Material mat = event.getHitBlock().getType();
 
 			// Spawn new golf ball
 			Snowball ball = (Snowball) world.spawnEntity(loc, EntityType.SNOWBALL);
@@ -80,7 +81,6 @@ public class ProjectileListener implements Listener
 			b.set(plugin.bubbleColumnKey, PersistentDataType.INTEGER, bubbleColumnStatus);
 
 			// Bounce off surfaces
-			Material mat = event.getHitBlock().getType();
 			switch (event.getHitBlockFace()) {
 				case NORTH:
 				case SOUTH:
@@ -147,10 +147,7 @@ public class ProjectileListener implements Listener
 					vel.multiply(0.7);
 
 					if (mat == Material.SLIME_BLOCK) {
-						System.out.println("We hit slime!");
 						vel.setY(vel.getY() * 1.2);
-					} else {
-						System.out.println("We did not hit slime... " + mat);
 					}
 
 					if (vel.getY() < 0.1) {
@@ -179,7 +176,8 @@ public class ProjectileListener implements Listener
 		}
 		Vector newVel = Teleporters.velocityAfterTeleport(vel, faceHit, teleporter.get());
 		BlockFace destinationFace = Teleporters.getConfiguredDestinationDirection(faceHit, teleporter.get());
-		Vector ballOffsetForDestinationFace = Teleporters.getOffsetForDestinationFace(destinationFace, ball.getY() - ((int)ball.getY()));
+		var ballLoc = ball.getLocation();
+		Vector ballOffsetForDestinationFace = Teleporters.getOffsetForDestinationFace(destinationFace, ballLoc.getY() - ((int)ballLoc.getY()));
 		Location newLoc = teleporter.get().getDestinationBlock(ball.getWorld()).getRelative(destinationFace).getLocation().add(ballOffsetForDestinationFace);
 		ball.teleport(newLoc);
 		return newVel;
