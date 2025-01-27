@@ -48,6 +48,11 @@ Reload Configurations.
 Have `<player_name>` start a game of mini-golf on the `<course_name>` course. If `<player_name>` is omitted, the command sender is assumed.
 
 
+#### /mgrank <num_ranks> <course_name>
+
+Return the top `<num_ranks>` ranks for the `<course_name>` course.
+
+
 
 ## Configurations
 

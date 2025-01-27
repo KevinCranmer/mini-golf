@@ -10,6 +10,7 @@ import com.chai.miniGolf.commands.DeleteCourseCommand;
 import com.chai.miniGolf.commands.EditCourseCommand;
 import com.chai.miniGolf.commands.InfoCommand;
 import com.chai.miniGolf.commands.PlayCommand;
+import com.chai.miniGolf.commands.RankCommand;
 import com.chai.miniGolf.commands.ReloadCommand;
 import com.chai.miniGolf.configs.MiniGolfConfig;
 import com.chai.miniGolf.managers.GolfingCourseManager;
@@ -201,6 +202,7 @@ public class Main extends JavaPlugin {
 		this.getCommand("mgedit").setExecutor(new EditCourseCommand());
 		this.getCommand("mginfo").setExecutor(new InfoCommand());
 		this.getCommand("mgplay").setExecutor(new PlayCommand());
+		this.getCommand("mgrank").setExecutor(new RankCommand());
 		this.getCommand("mgreload").setExecutor(new ReloadCommand());
 	}
 

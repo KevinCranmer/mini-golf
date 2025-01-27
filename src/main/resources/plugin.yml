@@ -26,6 +26,9 @@ commands:
     description: Play a Mini golf course
     usage: /mgplay <course_name> <optional:player_name>
     permission: mgop
+  mgrank:
+    description: List the top scores for a course
+    usage: /mgrank <num_ranks> <course_name>
   mgreload:
     description: Reload the configs
     permission: mgop
