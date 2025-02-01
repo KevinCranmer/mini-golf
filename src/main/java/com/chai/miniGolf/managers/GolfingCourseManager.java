@@ -78,15 +78,14 @@ public class GolfingCourseManager implements Listener {
         if (golfers.isEmpty()) {
             startGolfBallPhysicsTask();
         }
-        GolfingInfo golfersOldShtuff = golfers.get(event.golfer().getUniqueId());
-        if (golfersOldShtuff != null && golfersOldShtuff.getGolfball() != null) {
-            golfersOldShtuff.getGolfball().remove();
-        }
+        Optional<GolfingInfo> golfersOldShtuff = Optional.ofNullable(golfers.get(event.golfer().getUniqueId()));
+        golfersOldShtuff.map(GolfingInfo::getGolfball).ifPresent(Entity::remove);
         golfers.put(event.golfer().getUniqueId(),
             GolfingInfo.builder()
                 .course(event.course())
                 .golfball(event.course().playerStartedCourse(event.golfer()))
-                .invBeforeGolfing(event.golfer().getInventory().getContents().clone())
+                .invBeforeGolfing(golfersOldShtuff.map(GolfingInfo::getInvBeforeGolfing)
+                    .orElse(event.golfer().getInventory().getContents().clone()))
                 .hidingOthers(false)
                 .build()
             );
