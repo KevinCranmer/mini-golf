@@ -1,27 +1,29 @@
 # Mini-Golf
 Play mini golf in Minecraft!
 
-## How to Download:
-
-Click on the jar file:
-
-![img.png](pictures/click-on-the-jar-file.png)
-
-Click the download button:
-
-![img.png](pictures/click-download.png)
-
 ## Commands
 
-#### /mgcreatecourse <course_name>
+### /mgplay <course_name> (<player_name>)
+
+Have `<player_name>` start a game of mini-golf on the `<course_name>` course. If `<player_name>` is omitted, the command sender is assumed.
+
+```
+**NOTE**: I recommend you create a command block with
+this command for each course. That way players can
+just press a button and start golfing. You can leave
+<player_name> blank in the command block's command,
+and it will instead find the closest player.
+```
+
+### /mgcreatecourse <course_name>
 
 Creates a course with the provided name. The course can then be edited with [/mgedit](#/mgedit).
 
-#### /mgdelete <course_name>
+### /mgdelete <course_name>
 
 Delete a course.
 
-#### /mgedit <course_name|action>
+### /mgedit <course_name|action>
 
 The `mgedit` command is pretty in-depth. The first time you run it, you declare which course you would like to edit.
 The next time you run `mgedit` the following actions will be available for you:
@@ -39,16 +41,12 @@ The next time you run `mgedit` the following actions will be available for you:
 | `/mgedit createteleporter <entry_loc> <exit_loc> <hole_#>`                      | Creates Obsidian teleporters for the provided hole.                                                                                                                              |
 | `/mgedit editteleporter <exit_loc> <entry_direction> <exit_direction> <hole_#>` | Define a new rule for the teleporter. Now if a ball enters the starting teleporter from `<entry_direction>`, it'll exit from the end teleporter going in the `<exit_direction>`. |
 
-#### /mgreload
+### /mgreload
 
 Reload Configurations.
 
-#### /mgplay <course_name> (<player_name>)
 
-Have `<player_name>` start a game of mini-golf on the `<course_name>` course. If `<player_name>` is omitted, the command sender is assumed.
-
-
-#### /mgrank <num_ranks> <course_name>
+### /mgrank <num_ranks> <course_name>
 
 Return the top `<num_ranks>` ranks for the `<course_name>` course.
 
@@ -56,7 +54,7 @@ Return the top `<num_ranks>` ranks for the `<course_name>` course.
 
 ## Configurations
 
-The 3 different clubs each have extreme customizability.
+The 3 different clubs each have extreme customizability allowing for any size golf course you want.
 
 There are 3 different ways to hit a ball:
 - While sneaking
