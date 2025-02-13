@@ -130,6 +130,9 @@ public class GolfingCourseManager implements Listener {
             toggleVisibility(event.getPlayer());
             event.getPlayer().setCooldown(getPlugin().nextHoleItemItemStack().getType(), 1);
             event.setCancelled(true);
+        } else if (event.getAction().equals(Action.RIGHT_CLICK_BLOCK) && event.getItem().getType().equals(Material.IRON_HOE)) {
+            // prevent hoeing dirt
+            event.setCancelled(true);
         }
     }
 
@@ -522,24 +525,24 @@ public class GolfingCourseManager implements Listener {
 
     private void handleGlazedTerracotta(Snowball ball, Block block, Vector vel) {
         Directional directional = (Directional) block.getBlockData();
-        Vector newVel;
+        Vector velAdjustment;
         switch (directional.getFacing()) {
             case NORTH:
-                newVel = new Vector(vel.getX(), vel.getY(), vel.getZ() + getPlugin().config().getMagentaGlazedTerracottaAcceleration());
+                velAdjustment = new Vector(0, 0, getPlugin().config().getMagentaGlazedTerracottaAcceleration());
                 break;
             case SOUTH:
-                newVel = new Vector(vel.getX(), vel.getY(), -vel.getZ() + getPlugin().config().getMagentaGlazedTerracottaAcceleration());
+                velAdjustment = new Vector(0, 0, -getPlugin().config().getMagentaGlazedTerracottaAcceleration());
                 break;
             case EAST:
-                newVel = new Vector(-vel.getX() + getPlugin().config().getMagentaGlazedTerracottaAcceleration(), vel.getY(), vel.getZ());
+                velAdjustment = new Vector(-getPlugin().config().getMagentaGlazedTerracottaAcceleration(), 0, 0);
                 break;
             case WEST:
-                newVel = new Vector(vel.getZ() + getPlugin().config().getMagentaGlazedTerracottaAcceleration(), vel.getY(), vel.getZ());
+                velAdjustment = new Vector(getPlugin().config().getMagentaGlazedTerracottaAcceleration(), 0, 0);
                 break;
             default:
                 return;
         }
-        ball.setVelocity(newVel);
+        ball.setVelocity(ball.getVelocity().add(velAdjustment));
     }
 
     private void cleanUpAnyUnusedBalls(Player golfer) {

@@ -5,7 +5,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>com.chai.miniGolf</groupId>
 	<artifactId>miniGolf</artifactId>
-	<version>4.2</version>
+	<version>4.3</version>
 	<packaging>jar</packaging>
 
 	<name>mini-golf</name>
