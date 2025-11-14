@@ -357,7 +357,6 @@ public class GolfingCourseManager implements Listener {
                 break;
             case SLIME_BLOCK:
                 if (vel.getY() == 0) {
-                    System.out.println("Breaking now");
                     vel.setY(0.25);
                     ball.setVelocity(vel);
                     break;

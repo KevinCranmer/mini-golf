@@ -35,7 +35,7 @@ public class FileUtils {
             InputStreamReader defaultChanceConfigReader = new InputStreamReader(defaultChanceConfigStream);
             config.load(defaultChanceConfigReader);
         } catch (InvalidConfigurationException | IOException e) {
-            logger().info("[ VanillaHungerGames ] An error occured while trying to load the (default) " + configName + " file.");
+            logger().info("[ MiniGolf ] An error occured while trying to load the (default) " + configName + " file.");
             e.printStackTrace();
         }
         return config;
