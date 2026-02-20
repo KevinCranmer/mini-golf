@@ -68,6 +68,7 @@ public class PlayCommand implements CommandExecutor, TabCompleter
     private Player findNearestPlayer(BlockCommandSender bcs) {
         Location senderLoc = bcs.getBlock().getLocation();
         return Bukkit.getServer().getOnlinePlayers().stream()
+            .filter(p -> p.getWorld().equals(senderLoc.getWorld()))
             .min((p1, p2) -> (int) (p1.getLocation().distanceSquared(senderLoc) - p2.getLocation().distanceSquared(senderLoc)))
             .orElse(null);
     }

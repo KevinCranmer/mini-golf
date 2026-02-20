@@ -46,7 +46,6 @@ import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.scheduler.BukkitTask;
 import org.bukkit.util.Vector;
 
-import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.HashMap;
@@ -467,7 +466,6 @@ public class GolfingCourseManager implements Listener {
             .ifPresent(eb -> ball.teleport(eb.getExitBlock().getLocation().add(0.5, ball.getLocation().getY() - ((int)ball.getLocation().getY()), 0.5)));
     }
 
-    @Nullable
     private BubbleColumnExitBlock getValidExitBlockOrNull(Block block) {
         int distanceToGround = 0;
         Block originalBlock = block;
